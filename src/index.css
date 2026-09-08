@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.jsdelivr.net/npm/anthropic-fonts@1.1.0/cdn/v1/fonts/AnthropicSerif@300.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.jsdelivr.net/npm/anthropic-fonts@1.1.0/cdn/v1/fonts/AnthropicSerif@400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.jsdelivr.net/npm/anthropic-fonts@1.1.0/cdn/v1/fonts/AnthropicSerif@500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.jsdelivr.net/npm/anthropic-fonts@1.1.0/cdn/v1/fonts/AnthropicSerif@600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.jsdelivr.net/npm/anthropic-fonts@1.1.0/cdn/v1/fonts/AnthropicSerif@700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.jsdelivr.net/npm/anthropic-fonts@1.1.0/cdn/v1/fonts/AnthropicSerif@800.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.jsdelivr.net/npm/anthropic-fonts@1.1.0/cdn/v1/fonts/AnthropicSerif@900.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-serif: 'Anthropic Serif', Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-sans: 'Anthropic Serif', Georgia, Cambria, 'Times New Roman', Times, serif;
+
+  --color-brand-50: #f0faf4;
+  --color-brand-100: #dcf5e5;
+  --color-brand-200: #bbf0cd;
+  --color-brand-300: #8de4a8;
+  --color-brand-400: #5ecf85;
+  --color-brand-500: #48b76f;
+  --color-brand-600: #3ca361;
+  --color-brand-700: #31824e;
+  --color-brand-800: #26663f;
+  --color-brand-900: #1b4e30;
+  --color-brand-950: #0f301d;
+
+  --color-brand: #48b76f;
+}
+
+:root {
+  --brand-color: #48b76f;
+}
+
+html, body {
+  font-family: 'Anthropic Serif', Georgia, Cambria, 'Times New Roman', Times, serif;
+}
