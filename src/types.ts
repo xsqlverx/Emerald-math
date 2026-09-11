@@ -19,6 +19,7 @@ export interface IntakeFormData {
   studentGrade: string;
   preferredMode: DeliveryMode;
   notes?: string;
+  requestAssessmentConsent?: boolean;
 }
 
 export interface CurriculumTrack {

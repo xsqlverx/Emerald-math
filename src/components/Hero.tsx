@@ -18,9 +18,10 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({
   onBookClick,
-  phoneNumber = '(905) 431-7290',
+  phoneNumber = '+1 (587) 664 3477',
 }) => {
-  const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
+  const cleanDigits = phoneNumber.replace(/[^0-9]/g, '');
+  const telHref = cleanDigits.startsWith('1') ? `tel:+${cleanDigits}` : `tel:+1${cleanDigits}`;
 
   return (
     <section id="hero-section" className="relative">
@@ -75,7 +76,7 @@ export const Hero: React.FC<HeroProps> = ({
 
               <a
                 id="hero-call-now-btn"
-                href={`tel:1${cleanPhone}`}
+                href={telHref}
                 className="inline-flex items-center justify-center gap-2 bg-white border-2 border-slate-200 text-slate-700 px-7 py-3 rounded-xl font-bold text-base transition-all hover:border-[#48b76f] hover:text-[#3ca361] active:scale-[0.98]"
               >
                 <PhoneCall className="h-5 w-5 text-[#48b76f]" />
@@ -125,7 +126,7 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="mt-4 pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-600">
                 <span className="flex items-center gap-1 font-semibold">
                   <MapPin className="h-3.5 w-3.5 text-[#48b76f]" />
-                  Courtice (Hwy 2 & Townline)
+                  4 Granary Lane, Courtice
                 </span>
                 <span className="text-[#26663f] font-bold">
                   In-Person or Online

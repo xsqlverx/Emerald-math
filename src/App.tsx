@@ -12,7 +12,8 @@ export default function App() {
     'Grade 9 (MTH1W De-streamed Math)'
   );
   const [selectedMode, setSelectedMode] = useState<DeliveryMode>('in-person');
-  const phoneNumber = '(905) 431-7290';
+  const phoneNumber = '+1 (587) 664 3477';
+  const email = 'joseph737.math@gmail.com';
 
   const scrollToAssessment = () => {
     const intakeSection = document.getElementById('assessment-intake');
@@ -37,6 +38,7 @@ export default function App() {
       <Navbar
         onBookClick={scrollToAssessment}
         phoneNumber={phoneNumber}
+        email={email}
       />
 
       {/* Main Content Sections */}
@@ -62,12 +64,14 @@ export default function App() {
           initialGrade={selectedGrade}
           initialMode={selectedMode}
           phoneNumber={phoneNumber}
+          email={email}
         />
       </main>
 
       {/* Modular Footer */}
       <Footer
         phoneNumber={phoneNumber}
+        email={email}
         onBookClick={scrollToAssessment}
       />
     </div>

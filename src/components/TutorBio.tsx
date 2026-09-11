@@ -104,7 +104,7 @@ export const TutorBio: React.FC<TutorBioProps> = ({ onSelectDeliveryMode }) => {
               <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
                 <span className="flex items-center gap-1">
                   <MapPin className="h-3 w-3 text-[#48b76f]" />
-                  Courtice, ON
+                  4 Granary Lane, Courtice
                 </span>
                 <span className="font-semibold text-[#26663f]">Grades 5–12 Focus</span>
               </div>
@@ -239,7 +239,7 @@ export const TutorBio: React.FC<TutorBioProps> = ({ onSelectDeliveryMode }) => {
                 <div className="space-y-2 text-xs text-slate-700">
                   <div className="flex items-start gap-2">
                     <Check className="h-3.5 w-3.5 text-[#48b76f] shrink-0 mt-0.5" />
-                    <span><strong>Dedicated Courtice studio:</strong> Quiet environment near Hwy 2 & Townline.</span>
+                    <span><strong>Dedicated Courtice studio:</strong> Quiet environment at 4 Granary Lane, Courtice Ontario.</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <Check className="h-3.5 w-3.5 text-[#48b76f] shrink-0 mt-0.5" />

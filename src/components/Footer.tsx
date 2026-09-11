@@ -3,14 +3,17 @@ import { Compass, Phone, Mail, MapPin, Heart } from 'lucide-react';
 
 interface FooterProps {
   phoneNumber?: string;
+  email?: string;
   onBookClick: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  phoneNumber = '(905) 431-7290',
+  phoneNumber = '+1 (587) 664 3477',
+  email = 'joseph737.math@gmail.com',
   onBookClick,
 }) => {
-  const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
+  const cleanDigits = phoneNumber.replace(/[^0-9]/g, '');
+  const telHref = cleanDigits.startsWith('1') ? `tel:+${cleanDigits}` : `tel:+1${cleanDigits}`;
 
   return (
     <footer className="border-t border-slate-200 bg-slate-900 text-slate-300 py-10 mt-8">
@@ -32,7 +35,7 @@ export const Footer: React.FC<FooterProps> = ({
               </p>
               <div className="flex items-center gap-2 text-[11px] text-slate-500">
                 <MapPin className="h-3 w-3 text-[#48b76f]" />
-                <span>Courtice & Clarington, Durham Region, Ontario</span>
+                <span>4 Granary Lane, Courtice, Ontario</span>
               </div>
             </div>
 
@@ -57,11 +60,18 @@ export const Footer: React.FC<FooterProps> = ({
               </h4>
               <div className="space-y-2 text-xs">
                 <a
-                  href={`tel:1${cleanPhone}`}
+                  href={telHref}
                   className="flex items-center gap-2 text-[#48b76f] hover:text-[#8de4a8] transition"
                 >
                   <Phone className="h-3.5 w-3.5 shrink-0" />
                   <span className="font-semibold">{phoneNumber}</span>
+                </a>
+                <a
+                  href={`mailto:${email}`}
+                  className="flex items-center gap-2 text-slate-300 hover:text-[#8de4a8] transition break-all"
+                >
+                  <Mail className="h-3.5 w-3.5 shrink-0 text-[#48b76f]" />
+                  <span className="font-medium text-xs">{email}</span>
                 </a>
                 <button
                   type="button"

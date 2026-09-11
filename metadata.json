@@ -2,4 +2,5 @@
   "name": "Emerald Math",
   "description": "Grades 5–12 math tutoring in Courtice, Ontario and online by Emerald Math, aligned with the Ontario curriculum to eliminate math anxiety.",
   "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

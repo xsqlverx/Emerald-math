@@ -4,13 +4,16 @@ import { Phone, CalendarCheck, Compass, Sparkles } from 'lucide-react';
 interface NavbarProps {
   onBookClick: () => void;
   phoneNumber?: string;
+  email?: string;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onBookClick,
-  phoneNumber = '(905) 431-7290',
+  phoneNumber = '+1 (587) 664 3477',
+  email = 'joseph737.math@gmail.com',
 }) => {
-  const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
+  const cleanDigits = phoneNumber.replace(/[^0-9]/g, '');
+  const telHref = cleanDigits.startsWith('1') ? `tel:+${cleanDigits}` : `tel:+1${cleanDigits}`;
 
   return (
     <header
@@ -40,7 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Direct Phone Link */}
           <a
             id="nav-phone-link"
-            href={`tel:1${cleanPhone}`}
+            href={telHref}
             className="flex items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-[#3ca361]"
             aria-label={`Call directly at ${phoneNumber}`}
           >

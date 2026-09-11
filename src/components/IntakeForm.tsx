@@ -12,6 +12,8 @@ import {
   Send,
   MessageSquare,
   AlertCircle,
+  Mail,
+  X,
 } from 'lucide-react';
 import { DeliveryMode, IntakeFormData } from '../types';
 
@@ -19,6 +21,7 @@ interface IntakeFormProps {
   initialGrade?: string;
   initialMode?: DeliveryMode;
   phoneNumber?: string;
+  email?: string;
 }
 
 const GRADE_OPTIONS = [
@@ -38,7 +41,8 @@ const GRADE_OPTIONS = [
 export const IntakeForm: React.FC<IntakeFormProps> = ({
   initialGrade = 'Grade 9 (MTH1W De-streamed Math)',
   initialMode = 'in-person',
-  phoneNumber = '(905) 431-7290',
+  phoneNumber = '+1 (587) 664 3477',
+  email = 'joseph737.math@gmail.com',
 }) => {
   const [formData, setFormData] = useState<IntakeFormData>({
     parentName: '',
@@ -47,9 +51,11 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     studentGrade: initialGrade,
     preferredMode: initialMode,
     notes: '',
+    requestAssessmentConsent: true,
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [showOverlayModal, setShowOverlayModal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -78,6 +84,10 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     if (!formData.studentGrade) {
       newErrors.studentGrade = 'Please select your student’s grade';
     }
+    if (formData.requestAssessmentConsent === false) {
+      newErrors.requestAssessmentConsent =
+        'Please check the box to request your free 20-minute session and assessment';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -87,14 +97,16 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     if (!validate()) return;
 
     setIsSubmitting(true);
-    // Simulate swift local processing
+    // Simulate swift local processing & email notification
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
+      setShowOverlayModal(true);
     }, 600);
   };
 
-  const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
+  const cleanDigits = phoneNumber.replace(/[^0-9]/g, '');
+  const telHref = cleanDigits.startsWith('1') ? `tel:+${cleanDigits}` : `tel:+1${cleanDigits}`;
 
   return (
     <section
@@ -154,8 +166,8 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                       Assessment Request Received!
                     </h3>
                     <p className="text-sm text-[#dcf5e5] max-w-md mx-auto leading-relaxed">
-                      Thank you, <strong>{formData.parentName}</strong>. Joseph will review the background for <strong>{formData.studentGrade}</strong> and call you at{' '}
-                      <strong>{formData.phoneNumber}</strong> within 1 business day.
+                      Thank you, <strong>{formData.parentName}</strong>. Joseph will review the background for <strong>{formData.studentGrade}</strong> and contact you at{' '}
+                      <strong>{formData.phoneNumber}</strong> soon for your free 20 minute session, and your previous grade assessment before confirming intake.
                     </p>
 
                     <div className="my-5 rounded-xl bg-[#1b4e30]/90 p-4 border border-[#26663f] text-left text-xs space-y-2 max-w-md mx-auto text-[#dcf5e5]">
@@ -167,7 +179,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                         <span className="text-[#8de4a8]">Delivery Mode:</span>
                         <span className="font-semibold text-white capitalize">
                           {formData.preferredMode === 'in-person'
-                            ? 'In-Person (Courtice Studio)'
+                            ? 'In-Person (4 Granary Lane Studio)'
                             : 'Online (Live Whiteboard)'}
                         </span>
                       </div>
@@ -180,23 +192,20 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                     </div>
 
                     <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
-                      <a
-                        href={`tel:1${cleanPhone}`}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#48b76f] hover:bg-[#3ca361] px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition"
-                      >
-                        <Phone className="h-4 w-4" />
-                        <span>Call Joseph Directly</span>
-                      </a>
                       <button
                         type="button"
-                        onClick={() => {
-                          setSubmitted(false);
-                          setFormData((prev) => ({ ...prev, parentName: '', phoneNumber: '', notes: '' }));
-                        }}
-                        className="inline-flex items-center justify-center rounded-xl border border-[#26663f] bg-[#1b4e30]/80 px-4 py-2.5 text-sm font-semibold text-[#dcf5e5] hover:bg-[#1b4e30] transition"
+                        onClick={() => setShowOverlayModal(true)}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#48b76f] hover:bg-[#3ca361] px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition"
                       >
-                        Submit Another Student
+                        <span>View Confirmation Overlay</span>
                       </button>
+                      <a
+                        href={telHref}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#26663f] bg-[#1b4e30]/80 px-4 py-2.5 text-sm font-semibold text-[#dcf5e5] hover:bg-[#1b4e30] transition"
+                      >
+                        <Phone className="h-4 w-4 text-[#48b76f]" />
+                        <span>Call Joseph Directly</span>
+                      </a>
                     </div>
                   </div>
                 ) : (
@@ -246,7 +255,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                           setFormData({ ...formData, phoneNumber: e.target.value });
                           if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: '' });
                         }}
-                        placeholder="(289) 555-0123"
+                        placeholder="(587) 664-3477"
                         className={`w-full rounded-lg bg-[#1a442c]/90 border px-3 py-2.5 text-sm text-white placeholder-[#8de4a8]/50 focus:outline-none focus:ring-2 focus:ring-[#48b76f] ${
                           errors.phoneNumber ? 'border-rose-400 ring-1 ring-rose-400' : 'border-[#26663f]'
                         }`}
@@ -257,6 +266,24 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                           {errors.phoneNumber}
                         </p>
                       )}
+                    </div>
+
+                    {/* Email Address (Optional) */}
+                    <div>
+                      <label
+                        htmlFor="parentEmail"
+                        className="block text-xs font-semibold text-[#dcf5e5] uppercase mb-1"
+                      >
+                        Email Address (Optional)
+                      </label>
+                      <input
+                        type="email"
+                        id="parentEmail"
+                        value={formData.email || ''}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="parent@example.com"
+                        className="w-full rounded-lg bg-[#1a442c]/90 border border-[#26663f] px-3 py-2.5 text-sm text-white placeholder-[#8de4a8]/50 focus:outline-none focus:ring-2 focus:ring-[#48b76f]"
+                      />
                     </div>
 
                     {/* Student Grade Dropdown */}
@@ -344,6 +371,42 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                       />
                     </div>
 
+                    {/* Free Assessment Checkbox */}
+                    <div className="pt-1">
+                      <label
+                        htmlFor="requestAssessmentConsent"
+                        className="flex items-start gap-2.5 p-3 rounded-xl bg-[#1a442c]/80 border border-[#26663f] cursor-pointer hover:bg-[#1a442c] transition-colors"
+                      >
+                        <input
+                          type="checkbox"
+                          id="requestAssessmentConsent"
+                          checked={formData.requestAssessmentConsent ?? true}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              requestAssessmentConsent: e.target.checked,
+                            });
+                            if (errors.requestAssessmentConsent) {
+                              setErrors({ ...errors, requestAssessmentConsent: '' });
+                            }
+                          }}
+                          className="mt-0.5 h-4 w-4 rounded border-[#26663f] text-[#48b76f] accent-[#48b76f] focus:ring-[#48b76f] shrink-0"
+                        />
+                        <span className="text-xs text-[#dcf5e5] leading-relaxed select-none">
+                          <strong className="text-white font-semibold">
+                            Claim free 20-min session & assessment:
+                          </strong>{' '}
+                          Yes, contact me for the free 20 minute session, and previous grade assessment before confirming intake.
+                        </span>
+                      </label>
+                      {errors.requestAssessmentConsent && (
+                        <p className="mt-1 flex items-center gap-1 text-xs text-rose-300">
+                          <AlertCircle className="h-3.5 w-3.5" />
+                          {errors.requestAssessmentConsent}
+                        </p>
+                      )}
+                    </div>
+
                     {/* Submit Button */}
                     <button
                       id="submit-assessment-btn"
@@ -363,7 +426,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
                     <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#8de4a8] pt-1">
                       <ShieldCheck className="h-3.5 w-3.5 text-[#48b76f]" />
-                      <span>Confidential • Never shared • Quick 1-on-1 response</span>
+                      <span>Confidential • Instant notification • Quick response</span>
                     </div>
                   </form>
                 )}
@@ -388,20 +451,20 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 </div>
 
                 <div className="space-y-4">
-                  {/* Courtice Location Placeholder */}
+                  {/* Courtice Studio Address */}
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#48b76f]/10 text-[#3ca361] shrink-0">
                       <MapPin className="h-4 w-4" />
                     </div>
                     <div>
                       <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                        Courtice Location Placeholder
+                        Studio Address
                       </h4>
                       <p className="mt-0.5 text-sm font-semibold text-slate-900">
-                        Central Courtice, Ontario
+                        4 Granary Lane, Courtice, Ontario
                       </p>
                       <p className="text-xs text-slate-500">
-                        Near Highway 2 & Townline Rd. Serving Courtice, Bowmanville, and Oshawa.
+                        Courtice, ON. Serving Courtice, Bowmanville, and Oshawa.
                       </p>
                     </div>
                   </div>
@@ -416,13 +479,34 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                         Direct Phone
                       </h4>
                       <a
-                        href={`tel:1${cleanPhone}`}
+                        href={telHref}
                         className="mt-0.5 block text-base font-bold text-[#3ca361] hover:text-[#26663f] transition"
                       >
                         {phoneNumber}
                       </a>
                       <p className="text-xs text-slate-500">
                         Direct line to Joseph. Call or text anytime.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Direct Email */}
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#48b76f]/10 text-[#3ca361] shrink-0">
+                      <Mail className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                        Direct Email
+                      </h4>
+                      <a
+                        href={`mailto:${email}`}
+                        className="mt-0.5 block text-sm font-bold text-[#3ca361] hover:text-[#26663f] transition break-all"
+                      >
+                        {email}
+                      </a>
+                      <p className="text-xs text-slate-500">
+                        Send tests, syllabus, or general inquiries.
                       </p>
                     </div>
                   </div>
@@ -467,6 +551,94 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Pop-up Overlay Window with blurred background & highlighted modal */}
+      {showOverlayModal && (
+        <div
+          id="assessment-confirmation-modal"
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
+        >
+          {/* Highlighted Window with Emerald Accent Border & Ring */}
+          <div className="relative w-full max-w-lg rounded-2xl border-2 border-[#48b76f] bg-slate-900 p-6 sm:p-8 text-white shadow-2xl ring-4 ring-[#48b76f]/25">
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setShowOverlayModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
+              aria-label="Close modal"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="flex flex-col items-center text-center">
+              {/* Checkmark Icon */}
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#48b76f]/20 text-[#8de4a8] ring-4 ring-[#48b76f]/20 mb-4">
+                <CheckCircle className="h-9 w-9 text-[#48b76f]" />
+              </div>
+
+              {/* Status Badge */}
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#8de4a8] bg-[#1b4e30] px-3 py-1 rounded-full border border-[#26663f] mb-3">
+                Request Confirmed
+              </span>
+
+              {/* Exact user requested wording */}
+              <p className="text-base sm:text-lg font-bold text-white leading-snug max-w-md">
+                "thank you for filling the form we will contact you soon for your free 20 minute session, and your previous grade assement(before confirming intake)"
+              </p>
+
+              {/* Submitted Details Snapshot */}
+              <div className="my-5 w-full rounded-xl bg-slate-800/90 p-4 border border-slate-700/80 text-left text-xs space-y-2 text-slate-300">
+                <div className="flex justify-between border-b border-slate-700/50 pb-1.5">
+                  <span className="text-slate-400">Parent Name:</span>
+                  <span className="font-semibold text-white">{formData.parentName}</span>
+                </div>
+                <div className="flex justify-between border-b border-slate-700/50 pb-1.5">
+                  <span className="text-slate-400">Contact Number:</span>
+                  <span className="font-semibold text-[#8de4a8]">{formData.phoneNumber}</span>
+                </div>
+                {formData.email && (
+                  <div className="flex justify-between border-b border-slate-700/50 pb-1.5">
+                    <span className="text-slate-400">Contact Email:</span>
+                    <span className="font-semibold text-white">{formData.email}</span>
+                  </div>
+                )}
+                <div className="flex justify-between border-b border-slate-700/50 pb-1.5">
+                  <span className="text-slate-400">Student Grade:</span>
+                  <span className="font-semibold text-white">{formData.studentGrade}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Format:</span>
+                  <span className="font-semibold text-white capitalize">
+                    {formData.preferredMode === 'in-person'
+                      ? 'In-Person (4 Granary Lane, Courtice)'
+                      : 'Online Whiteboard'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex w-full flex-col sm:flex-row gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowOverlayModal(false)}
+                  className="w-full rounded-xl bg-[#48b76f] hover:bg-[#3ca361] py-3 px-5 text-sm font-bold text-white shadow-lg shadow-[#48b76f]/25 transition active:scale-[0.98]"
+                >
+                  Close Window
+                </button>
+                <a
+                  href={telHref}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 py-3 px-5 text-sm font-semibold text-slate-200 transition"
+                >
+                  <Phone className="h-4 w-4 text-[#48b76f]" />
+                  <span>Call Joseph Directly</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
