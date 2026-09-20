@@ -92,17 +92,47 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
-    // Simulate swift local processing & email notification
-    setTimeout(() => {
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'c43284ee-c550-482f-bf77-6de3cee81466',
+          subject: `New Math Assessment Request: ${formData.studentGrade} - ${formData.parentName}`,
+          from_name: 'Emerald Math Intake',
+          parent_name: formData.parentName,
+          phone_number: formData.phoneNumber,
+          parent_email: formData.email || 'Not provided',
+          student_grade: formData.studentGrade,
+          preferred_mode:
+            formData.preferredMode === 'in-person'
+              ? 'In-Person (4 Granary Lane Studio, Courtice)'
+              : 'Online (Interactive Live Whiteboard)',
+          free_assessment_requested: 'Yes (Free 20-min session & grade assessment)',
+          notes: formData.notes || 'None provided',
+        }),
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        console.warn('Web3Forms response warning:', result.message);
+      }
+    } catch (err) {
+      console.error('Error submitting assessment request:', err);
+    } finally {
       setIsSubmitting(false);
       setSubmitted(true);
       setShowOverlayModal(true);
-    }, 600);
+    }
   };
 
   const cleanDigits = phoneNumber.replace(/[^0-9]/g, '');
